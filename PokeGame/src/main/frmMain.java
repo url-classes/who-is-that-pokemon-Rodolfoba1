@@ -21,7 +21,7 @@ import javax.swing.ImageIcon;
  * @author Miguel Matul <https://github.com/MigueMat4>
  */
 public class frmMain extends javax.swing.JFrame {
-    
+    Hilo miHilo1 = new Hilo();
     Pokemon whoIsThatPokemon; // objeto de la clase que hace match con los datos de la API
     Pokedex dexter = new Pokedex();
     PokeViewer visor = new PokeViewer();
@@ -32,7 +32,9 @@ public class frmMain extends javax.swing.JFrame {
      */
     public frmMain() {
         initComponents();
+        miHilo1.start();
         horaActual.start();
+        
     }
     
     public class PokeViewer {
@@ -45,12 +47,12 @@ public class frmMain extends javax.swing.JFrame {
                     Image img = ImageIO.read(url);
                     lblSprite.setIcon(new ImageIcon(img));
                     // 1 segundo para cada cambio de sprite
-                    Thread.sleep(1000);
+                    Thread.sleep(150);
                         
                     url = new URL(whoIsThatPokemon.getSprites().get("back_default").toString());
                     img = ImageIO.read(url);
                     lblSprite.setIcon(new ImageIcon(img));
-                    Thread.sleep(1000);
+                    Thread.sleep(150);
                 } catch (MalformedURLException ex) {
                     Logger.getLogger(frmMain.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (InterruptedException | IOException ex) {
@@ -167,6 +169,7 @@ public class frmMain extends javax.swing.JFrame {
 
     private void btnJugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJugarActionPerformed
         try {
+            miHilo1.startRunning();
             whoIsThatPokemon = dexter.buscarPokemon();
             btnPokemon1.setText(whoIsThatPokemon.getName());
             btnPokemon2.setText(whoIsThatPokemon.getName());
@@ -213,6 +216,15 @@ public class frmMain extends javax.swing.JFrame {
             }
         });
     }
+    
+    public class Hilo extends Thread {
+        private boolean run = false;
+        
+        public void startRunning(){
+            run  = true;
+        }
+     }
+    
     
     // clase para la hora del sistema. ¡No modificar!
     public class Reloj extends Thread {
